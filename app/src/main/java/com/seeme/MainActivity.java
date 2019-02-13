@@ -70,8 +70,9 @@ public class MainActivity extends AppCompatActivity {
             public void onImage(CameraKitView cameraKitView, byte[] bytes) {
              //   Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-                Intent i = new Intent();
+                Intent i = new Intent(MainActivity.this, CapturedImage.class);
                 i.putExtra("byteArray", bytes);
+                startActivity(i);
 
             }
         });
