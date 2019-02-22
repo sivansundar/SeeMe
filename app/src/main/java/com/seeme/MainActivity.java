@@ -1,12 +1,19 @@
 package com.seeme;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.camerakit.CameraKitView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -17,16 +24,18 @@ import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
+import com.seeme.Fragments.LoginFragment;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoginFragment.OnFragmentInteractionListener {
 
+    //  1:58AM. Next batch of work listed below
+    //  Setup Google Sign in Auth
+    //  Design DB Schema for individual user (Firestore)
+    //  Formulate effective means to process data from camera and store.
 
     private static final String TAG = "Captured Image LOG : ";
 
@@ -35,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
     CameraKitView camera;
     @BindView(R.id.capture)
     FloatingActionButton capture;
+    @BindView(R.id.mainFrame)
+    FrameLayout mainFrame;
+
+
+    private LoginFragment loginFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +56,16 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        loginFragment = new LoginFragment();
+        goToLoginFragment(loginFragment);
 
 
+    }
 
+    private void goToLoginFragment(LoginFragment loginFragment) {
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction().replace(R.id.mainFrame, loginFragment);
+        fragmentTransaction.commit();
     }
 
 
@@ -122,13 +143,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.capture)
+ /*   @OnClick(R.id.capture)
     public void onViewClicked() {
 
         camera.captureImage(new CameraKitView.ImageCallback() {
             @Override
             public void onImage(CameraKitView cameraKitView, byte[] bytes) {
-             //   Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                //   Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 Toast.makeText(MainActivity.this, "gfhfhkfkh", Toast.LENGTH_SHORT).show();
 
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -137,5 +158,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }*/
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
+
+
 }

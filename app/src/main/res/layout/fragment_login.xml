@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context=".Fragments.LoginFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.google.android.gms.common.SignInButton
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="250dp"
+            android:layout_height="50dp"></com.google.android.gms.common.SignInButton>
+
+
+    </RelativeLayout>
+</FrameLayout>
