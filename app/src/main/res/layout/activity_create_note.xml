@@ -50,8 +50,9 @@
             android:layout_marginTop="50dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColorHint="#fff"
-            android:hint="Write here"/>
+            android:textColorHint="#D3D3D3"
+            android:hint="Write here"
+            />
 
 
 

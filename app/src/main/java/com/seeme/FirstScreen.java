@@ -61,4 +61,11 @@ public class FirstScreen extends AppCompatActivity {
         startActivity(new Intent(FirstScreen.this, CreateNoteActivity.class));
 
     }
+
+    @Override
+    public void onBackPressed(){
+        finishAffinity();
+        super.onBackPressed();
+    }
+
 }
