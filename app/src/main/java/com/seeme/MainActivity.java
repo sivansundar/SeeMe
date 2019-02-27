@@ -191,7 +191,9 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseFirestore.collection("users").document(currentUser.getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: User details recorded : " + "Username : " + currentUser.getDisplayName() + "\n UID : " + currentUser.getUid());
+                Log.d(TAG, "onSuccess: User details recorded : " + "Username : " +
+                        currentUser.getDisplayName() + "\n UID : " +
+                        currentUser.getUid());
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

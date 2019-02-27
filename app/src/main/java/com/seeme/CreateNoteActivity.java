@@ -39,6 +39,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -54,12 +57,17 @@ public class CreateNoteActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
     String UID;
     String DID;
+
+    FirebaseUser user;
+    FirebaseAuth firebaseAuth;
     private static String TAG = "CreateNoteActvity : ";
     @BindView(R.id.notetext_edittext)
     EditText notetextEdittext;
     String notetxt;
     @BindView(R.id.capture)
     ImageView capture;
+    @BindView(R.id.title_edittext)
+    EditText titleEdittext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,46 +76,53 @@ public class CreateNoteActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+        UID = user.getUid();
 
     }
-
 
 
     @Override
     public void onBackPressed() {
         notetxt = notetextEdittext.getText().toString();
-        getNote();
-        this.finish();
+        writeNote(UID);
         Toast.makeText(this, "Back pressed", Toast.LENGTH_SHORT).show();
         super.onBackPressed();
 
     }
 
-    private void getNote() {
+    private void writeNote(String userID) {
+        String docTitle = titleEdittext.getText().toString().trim();
 
-        Map<String, Object> note = new HashMap<>();
-        note.put("content", notetxt);
-        UID = "User1";
-        DID = "DocID1";
-        firebaseFirestore.collection(UID).document("DID").set(note).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d(TAG, "onSuccess: Snapshot written");
-                Toast.makeText(CreateNoteActivity.this, "Successfully written", Toast.LENGTH_SHORT).show();
-            }
-        })
-                .addOnFailureListener(new OnFailureListener() {
+        Map<String, Object> docHashMap = new HashMap<>();
+        docHashMap.put("Title", docTitle);
+        docHashMap.put("Content", notetxt);
+
+
+        firebaseFirestore.collection("users").document(userID).collection("notes").document(docTitle).set(docHashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
+                    public void onSuccess(Void aVoid) {
+
+                        Log.d(TAG, "onSuccess: Note created successfully with title : " + docTitle);
+                        Toast.makeText(CreateNoteActivity.this, "Created successfully", Toast.LENGTH_SHORT).show();
 
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+                Log.e(TAG, "onFailure: ", e );
+                Toast.makeText(CreateNoteActivity.this, "Error occured. Check log", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     @OnClick(R.id.capture)
     public void onViewClicked() {
 
-        getNote();
 
     }
 }
