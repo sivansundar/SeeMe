@@ -57,13 +57,15 @@ public class CreateNoteActivity extends AppCompatActivity {
     FirebaseFirestore firebaseFirestore;
     String UID;
     String DID;
+    String docTitle;
+    String notetxt;
+
 
     FirebaseUser user;
     FirebaseAuth firebaseAuth;
     private static String TAG = "CreateNoteActvity : ";
     @BindView(R.id.notetext_edittext)
     EditText notetextEdittext;
-    String notetxt;
     @BindView(R.id.capture)
     ImageView capture;
     @BindView(R.id.title_edittext)
@@ -86,37 +88,44 @@ public class CreateNoteActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         notetxt = notetextEdittext.getText().toString();
-        writeNote(UID);
+        docTitle = titleEdittext.getText().toString().trim();
+
+        if (notetxt.isEmpty() && docTitle.isEmpty()) {
+            Toast.makeText(this, "Content empty", Toast.LENGTH_SHORT).show();
+        }
+        else {
+
+            writeNote(UID, notetxt, docTitle);
+        }
         Toast.makeText(this, "Back pressed", Toast.LENGTH_SHORT).show();
         super.onBackPressed();
 
     }
 
-    private void writeNote(String userID) {
-        String docTitle = titleEdittext.getText().toString().trim();
+    private void writeNote(String userID, String noteText, String documentTitle) {
 
         Map<String, Object> docHashMap = new HashMap<>();
-        docHashMap.put("Title", docTitle);
-        docHashMap.put("Content", notetxt);
+        docHashMap.put("title", documentTitle);
+        docHashMap.put("content", noteText);
 
-
-        firebaseFirestore.collection("users").document(userID).collection("notes").document(docTitle).set(docHashMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+        firebaseFirestore.collection("users").document(userID).collection("notes").add(docHashMap)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
+                    public void onSuccess(DocumentReference documentReference) {
 
-                        Log.d(TAG, "onSuccess: Note created successfully with title : " + docTitle);
+                        Log.d(TAG, "onSuccess: Note created successfully with title : " + documentTitle);
                         Toast.makeText(CreateNoteActivity.this, "Created successfully", Toast.LENGTH_SHORT).show();
 
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-                Log.e(TAG, "onFailure: ", e );
-                Toast.makeText(CreateNoteActivity.this, "Error occured. Check log", Toast.LENGTH_SHORT).show();
-            }
-        });
+                        Log.e(TAG, "onFailure: ", e );
+                        Toast.makeText(CreateNoteActivity.this, "Error occured. Check log", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 
