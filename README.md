@@ -14,7 +14,7 @@ This is an app which allows you take notes by clicking an image. Converts image 
 (Will update these alongside my future commits.)
 
 ## Updates
-* 26/2/2019 - Implemented Google Sign In using Firebase Auth. Alpha version of the UI is built along with the note taking screen etc.
+* Check commit messages
 
 ## Screenshots
 
