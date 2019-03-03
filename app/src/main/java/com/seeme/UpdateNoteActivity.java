@@ -50,10 +50,12 @@ import butterknife.ButterKnife;
 
 public class UpdateNoteActivity extends AppCompatActivity {
 
-    @BindView(R.id.editText)
-    TextInputEditText editText;
+    @BindView(R.id.content_editText)
+    TextInputEditText content_editText;
     @BindView(R.id.capture_btn)
     FloatingActionButton captureBtn;
+    @BindView(R.id.title_edittext)
+    TextInputEditText titleEdittext;
     private FirebaseFirestore mFirestore;
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
@@ -87,8 +89,12 @@ public class UpdateNoteActivity extends AppCompatActivity {
                 if (e != null) {
                     Log.e(TAG, "onEvent: ", e);
                 } else {
+                    String docTitle = documentSnapshot.get("title").toString();
+                    String docContent = documentSnapshot.get("content").toString();
 
-                    Log.d(TAG, "onEvent: Document title = " + documentSnapshot.get("title") + "\n Document Content = " + documentSnapshot.get("content"));
+                    content_editText.setText(docContent);
+                    titleEdittext.setText(docTitle);
+                    Log.d(TAG, "onEvent: Document title = " + docTitle + "\n Document Content = " + docContent);
 
 
                 }
