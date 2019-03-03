@@ -27,35 +27,35 @@
   ~  */
   -->
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent"
+    tools:context=".UpdateNoteActivity">
 
-  <RelativeLayout
-      android:id="@+id/main_content"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/editText"
+        android:layout_above="@id/footer"
+        android:gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
+    <RelativeLayout
+        android:id="@+id/footer"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/capture_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/outline_camera_alt_black_36"/>
 
-      <com.google.android.gms.common.SignInButton
-          android:id="@+id/mGSignIn_btn"
-          android:layout_centerVertical="true"
-          android:layout_centerHorizontal="true"
-          android:layout_width="250dp"
-          android:layout_height="50dp"></com.google.android.gms.common.SignInButton>
-
-
-
-
-  </RelativeLayout>
-
-
+    </RelativeLayout>
 
 
 </RelativeLayout>

@@ -28,24 +28,50 @@
 
 package com.seeme.Adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.seeme.FirstScreen;
 import com.seeme.Model.Note;
 import com.seeme.R;
+import com.seeme.UpdateNoteActivity;
 
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Random;
+
+import javax.annotation.Nullable;
 
 public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHolder> {
 
+    private Context context;
+
     public List<Note> notes;
+    private static String TAG = "NoteListAdapter LOG : ";
+    private FirebaseFirestore mFirestore;
+    private FirebaseAuth mAuth;
+    private FirebaseUser mUser;
+    
+    public String docID;
 
     public NoteListAdapter(List<Note> note) {
 
@@ -59,15 +85,52 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.note_item, parent, false);
+        mFirestore = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         holder.title_item.setText(notes.get(position).getTitle());
         holder.content_item.setText(notes.get(position).getContent());
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: OnBindViewHolder + position : " + position);
+                retrieveDocid(position);
+            }
+        });
+
+
+
+
+
+    }
+
+    private void retrieveDocid(int itemposition) {
+
+        mFirestore.collection("users").document(mUser.getUid()).collection("notes").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e!=null) {
+                    Log.e(TAG, "onEvent: ", e );
+                }
+                else {
+
+                    docID = queryDocumentSnapshots.getDocuments().get(itemposition).getId();
+                    Log.d(TAG, "onEvent: DOC ID  = " + docID);
+
+                    Intent intent;
+                    intent = new Intent(context, UpdateNoteActivity.class);
+                    intent.putExtra("id", docID);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
@@ -81,14 +144,17 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
 
         public TextView title_item;
         public TextView content_item;
+        public CardView cardView;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
+            context = itemView.getContext();
 
             title_item = itemView.findViewById(R.id.item_title);
             content_item = itemView.findViewById(R.id.item_content);
+            cardView = itemView.findViewById(R.id.noteItem_card);
 
         }
     }

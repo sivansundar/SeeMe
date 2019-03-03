@@ -28,6 +28,7 @@
 
 package com.seeme;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -46,6 +47,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +85,6 @@ public class CreateNoteActivity extends AppCompatActivity {
         UID = user.getUid();
 
     }
-
 
     @Override
     public void onBackPressed() {

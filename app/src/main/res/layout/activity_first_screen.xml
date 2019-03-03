@@ -32,6 +32,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
     tools:context=".FirstScreen">
 
 
@@ -66,6 +67,8 @@
             android:id="@+id/takenote_edittext"
             android:layout_width="match_parent"
             android:hint="Take note my lord"
+            android:textColor="#fff"
+            android:textColorHint="#a8a8a8"
             android:layout_height="wrap_content"/>
 
     </RelativeLayout>

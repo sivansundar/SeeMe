@@ -114,7 +114,6 @@ public class FirstScreen extends AppCompatActivity {
                     if (doc.getType() == DocumentChange.Type.MODIFIED || doc.getType() == DocumentChange.Type.ADDED || doc.getType() == DocumentChange.Type.REMOVED) {
                         String logdetails = doc.getDocument().getString("Title");
                         Log.d(TAG, "onEvent: " + logdetails);
-
                         Note note = doc.getDocument().toObject(Note.class);
                         noteList.add(note);
 
