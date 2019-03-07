@@ -49,6 +49,14 @@
             android:hint="Title"
             android:textColorHint="#D3D3D3"/>
 
+
+        <com.camerakit.CameraKitView
+            android:id="@+id/camera"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            ></com.camerakit.CameraKitView>
+
         <EditText
             android:textColor="#fff"
             android:id="@+id/notetext_edittext"
@@ -72,12 +80,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/capture"
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/capture_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/outline_camera_alt_black_48"/>
+            android:src="@drawable/outline_camera_alt_black_36"/>
 
     </RelativeLayout>
 </RelativeLayout>

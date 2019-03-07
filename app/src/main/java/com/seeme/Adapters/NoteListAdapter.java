@@ -102,6 +102,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
             public void onClick(View v) {
                 Log.d(TAG, "onClick: OnBindViewHolder + position : " + position);
                 retrieveDocid(position);
+
+
             }
         });
 
@@ -127,9 +129,12 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.ViewHo
                     Intent intent;
                     intent = new Intent(context, UpdateNoteActivity.class);
                     intent.putExtra("id", docID);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(intent);
                 }
-            }
+                }
+
+
         });
     }
 

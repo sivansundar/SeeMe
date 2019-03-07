@@ -28,12 +28,17 @@
 
 package com.seeme;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,6 +47,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.HashMap;
 
 import javax.annotation.Nullable;
 
@@ -80,6 +87,53 @@ public class UpdateNoteActivity extends AppCompatActivity {
         Toast.makeText(this, "" + documentID, Toast.LENGTH_SHORT).show();
 
         getDocDetails(documentID);
+    }
+
+    @Override
+    public void onBackPressed() {
+
+      updateNote();
+
+        super.onBackPressed();
+     }
+
+    @Override
+    protected void onPause() {
+        Toast.makeText(this, "PAUSED", Toast.LENGTH_SHORT).show();
+        updateNote();
+        super.onPause();
+    }
+
+    private void updateNote() {
+
+        String string_title = titleEdittext.getText().toString();
+        String string_content = content_editText.getText().toString();
+
+        HashMap<String, Object> updateHash = new HashMap<>();
+        updateHash.put("title", string_title);
+        updateHash.put("content", string_content);
+
+        mFirestore.collection("users").document(mUser.getUid()).collection("notes").document(documentID).update(updateHash)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(UpdateNoteActivity.this, "UPDATED!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: Update func ERROR", e );
+                    }
+
+
+                });
+
+
+        Intent mIntent = new Intent(UpdateNoteActivity.this, FirstScreen.class);
+        mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mIntent);
+
     }
 
     private void getDocDetails(String docID) {

@@ -28,18 +28,18 @@
 
 package com.seeme;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.camerakit.CameraKitView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -47,7 +47,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,10 +67,12 @@ public class CreateNoteActivity extends AppCompatActivity {
     private static String TAG = "CreateNoteActvity : ";
     @BindView(R.id.notetext_edittext)
     EditText notetextEdittext;
-    @BindView(R.id.capture)
-    ImageView capture;
     @BindView(R.id.title_edittext)
     EditText titleEdittext;
+    @BindView(R.id.camera)
+    CameraKitView camera;
+    @BindView(R.id.capture_btn)
+    FloatingActionButton captureBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,9 @@ public class CreateNoteActivity extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
         UID = user.getUid();
 
+        captureBtn.setTag(R.drawable.outline_camera_alt_black_36);
+
+
     }
 
     @Override
@@ -93,8 +97,7 @@ public class CreateNoteActivity extends AppCompatActivity {
 
         if (notetxt.isEmpty() && docTitle.isEmpty()) {
             Toast.makeText(this, "Content empty", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
 
             writeNote(UID, notetxt, docTitle);
         }
@@ -123,16 +126,27 @@ public class CreateNoteActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
 
-                        Log.e(TAG, "onFailure: ", e );
+                        Log.e(TAG, "onFailure: ", e);
                         Toast.makeText(CreateNoteActivity.this, "Error occured. Check log", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
 
-    @OnClick(R.id.capture)
+    @OnClick(R.id.capture_btn)
     public void onViewClicked() {
 
+        Integer res = (Integer) captureBtn.getTag();
+        if (res.equals( R.drawable.outline_camera_alt_black_36)) {
+            captureBtn.setImageResource(R.drawable.sharp_camera_black_36);
+            captureBtn.setTag(R.drawable.sharp_camera_black_36);
+        }
 
+        else {
+            captureBtn.setImageResource(R.drawable.outline_camera_alt_black_36);
+            captureBtn.setTag(R.drawable.outline_camera_alt_black_36);
+
+
+        }
     }
 }
