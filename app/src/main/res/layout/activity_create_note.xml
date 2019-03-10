@@ -50,12 +50,7 @@
             android:textColorHint="#D3D3D3"/>
 
 
-        <com.camerakit.CameraKitView
-            android:id="@+id/camera"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible"
-            ></com.camerakit.CameraKitView>
+
 
         <EditText
             android:textColor="#fff"

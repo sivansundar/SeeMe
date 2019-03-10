@@ -28,8 +28,12 @@
 
 package com.seeme;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -61,6 +65,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     String docTitle;
     String notetxt;
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
 
     FirebaseUser user;
     FirebaseAuth firebaseAuth;
@@ -69,8 +74,7 @@ public class CreateNoteActivity extends AppCompatActivity {
     EditText notetextEdittext;
     @BindView(R.id.title_edittext)
     EditText titleEdittext;
-    @BindView(R.id.camera)
-    CameraKitView camera;
+
     @BindView(R.id.capture_btn)
     FloatingActionButton captureBtn;
 
@@ -85,7 +89,6 @@ public class CreateNoteActivity extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
         UID = user.getUid();
 
-        captureBtn.setTag(R.drawable.outline_camera_alt_black_36);
 
 
     }
@@ -136,17 +139,27 @@ public class CreateNoteActivity extends AppCompatActivity {
     @OnClick(R.id.capture_btn)
     public void onViewClicked() {
 
-        Integer res = (Integer) captureBtn.getTag();
-        if (res.equals( R.drawable.outline_camera_alt_black_36)) {
-            captureBtn.setImageResource(R.drawable.sharp_camera_black_36);
-            captureBtn.setTag(R.drawable.sharp_camera_black_36);
-        }
-
-        else {
-            captureBtn.setImageResource(R.drawable.outline_camera_alt_black_36);
-            captureBtn.setTag(R.drawable.outline_camera_alt_black_36);
+      dispatchTakePictureIntent();
+    }
 
 
+
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            Toast.makeText(this, "Image captured", Toast.LENGTH_SHORT).show();
+                }
+    }
+
+
 }
