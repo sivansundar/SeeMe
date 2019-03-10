@@ -28,26 +28,41 @@
 
 package com.seeme;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.util.SparseIntArray;
+import android.view.Surface;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.camerakit.CameraKitView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.google.firebase.ml.vision.text.FirebaseVisionTextRecognizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,6 +79,9 @@ public class CreateNoteActivity extends AppCompatActivity {
     String DID;
     String docTitle;
     String notetxt;
+
+    private static final String MY_CAMERA_ID = "my_camera_id";
+
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
@@ -152,13 +170,53 @@ public class CreateNoteActivity extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             Toast.makeText(this, "Image captured", Toast.LENGTH_SHORT).show();
-                }
+
+
+
+            doOCR(imageBitmap);
+
+        }
+    }
+
+    private void doOCR(Bitmap imageBitmap) {
+
+        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(imageBitmap);
+
+        FirebaseVisionTextRecognizer detector = FirebaseVision.getInstance()
+                .getOnDeviceTextRecognizer();
+
+        Task<FirebaseVisionText> result =
+                detector.processImage(image)
+                        .addOnSuccessListener(new OnSuccessListener<FirebaseVisionText>() {
+                            @Override
+                            public void onSuccess(FirebaseVisionText firebaseVisionText) {
+                                // Task completed successfully
+                                // ...
+
+                                Toast.makeText(CreateNoteActivity.this, firebaseVisionText.getText(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(
+                                new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Task failed with an exception
+                                        // ...
+
+                                        Toast.makeText(CreateNoteActivity.this, "" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+
+
     }
 
 

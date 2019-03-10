@@ -55,10 +55,10 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.google.firebase:firebase-ml-vision:18.0.2'
     implementation 'com.google.firebase:firebase-firestore:18.0.1'
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
 
     //CameraKit
     implementation 'com.camerakit:camerakit:1.0.0-beta3.10'
